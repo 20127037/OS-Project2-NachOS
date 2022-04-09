@@ -25,6 +25,19 @@
 #include "system.h"
 #include "syscall.h"
 
+// increase program counter
+
+void IncreasePC()
+{
+	int cur = machine->ReadRegister(PCReg);
+	machine->WriteRegister(PrevPCReg, cur);
+	//increase
+	cur = machine->ReadRegister(NextPCReg);
+	machine->WriteRegister(PCReg, cur);
+
+	machine->WriteRegister(NextPCReg, cur + 4);	//A MIPS instruction is 32 bits or 4 bytes (always).
+}
+
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
