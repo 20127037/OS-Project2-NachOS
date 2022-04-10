@@ -135,9 +135,39 @@ ExceptionHandler(ExceptionType which)
 					result = op1 - op2;
 					machine->WriteRegister (2, result);
 					interrupt->Halt();
+					break;	
+				
+				case SC_ReadInt:
+					ReadInt();
+					break;
+					
+				case SC_PrintInt:
+					PrintInt();
+					break;
+				
+				case SC_ReadChar:
+					ReadChar();
+					break;
+				
+				case SC_PrintChar:
+					PrintChar();
 					break;		
+				
+				case SC_ReadString:
+					ReadString();
+					break;
+					
+				case SC_PrintString:
+					PrintString();
+					break;
 			}
+			IncreasePC();
+			
+			break;
 		}
+		default:
+		printf("Unexpected user mode exception %d %d\n", which, type);
+		ASSERT(FALSE);
 	}
 }
 
