@@ -137,11 +137,5 @@ void ReadInt()
 		DEBUG('a', "\n The number is invalid");
 		machine->WriteRegister(2, 0);
 	}
-	else
-	{
-		for (int i = cur + 1; i < numBytes; i++)
-			result = result *10 + (int)(buf[i] - 48);
-		machine->WriteRegister(2, result);
-	}
 	delete buf;
 }
