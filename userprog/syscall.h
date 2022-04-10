@@ -126,7 +126,7 @@ void Yield();
 int ReadInt();
 void PrintInt(int);
 void ReadChar();
-void PrintChar();
+void PrintChar(char);
 
 #endif /* IN_ASM */
 
