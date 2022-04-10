@@ -142,9 +142,9 @@ int ReadInt()
 	}
 	delete buf;
 }
-void PrintInt(int number)
+void PrintInt()
 {
-	number = machine -> ReadRegister(4);
+	int number = machine -> ReadRegister(4);
 	if (number == 0)
 	{
 		gSynchConsole -> Write("0",1);
