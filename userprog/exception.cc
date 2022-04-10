@@ -24,7 +24,8 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
-
+#include <iostream>
+#include <cmath>
 // increase program counter
 
 void IncreasePC()
