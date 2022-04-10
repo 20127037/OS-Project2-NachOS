@@ -24,8 +24,8 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
-#include <iostream>
-#include <cmath>
+#define MAX 200
+
 // increase program counter
 
 void IncreasePC()
@@ -170,4 +170,30 @@ void PrintInt(int number)
 	if(Nega) buf[0] = '-';
 	gSynchConsole->Write(buf, len +1);
 	break;
+}
+
+
+
+void ReadChar(){
+	char* buffer = new char[MAX+1];
+	int numBytes = gSynchConsole->Read(buffer, MAX+1);
+	if (numBytes == -1)
+	{
+		printf("\n Error reading character \n")
+		break;	
+	}
+	else (numBytes > 1)
+	{
+		printf("\n Error too big for char \n")
+		break;
+	}
+	machine->WriteRegister(2, buffer[0]);
+	delete buffer;
+	break;
+}
+
+void PrintChar(){
+	char c = (char)machine->ReadRegister(4);
+	gSynchConsole->Write(&c, 1);
+	break;	
 }
