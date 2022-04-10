@@ -124,6 +124,7 @@ void Fork(void (*func)());
  */
 void Yield();		
 int ReadInt();
+void PrintInt(int);
 #endif /* IN_ASM */
 
 #endif /* SYSCALL_H */
