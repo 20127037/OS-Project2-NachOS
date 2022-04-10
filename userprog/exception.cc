@@ -24,7 +24,6 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
-#define MAX 200
 
 // increase program counter
 
@@ -103,14 +102,13 @@ ExceptionHandler(ExceptionType which)
 	}
 }
 
-void ReadInt()
+int ReadInt()
 {
 	char* buf = new char[MAX+1];
-	int numBytes = gSynchConsole -> Read(buf, MAX+1);
-	int cur = 1;
+	int numBytes = gSynchConsole -> Read(buf, 256);
+	int cur = 0;
 	bool isValid = true;
-	bool dot = false;
-	int res = 0;
+	bool dot = false;	
 	for(int i = cur; i < numBytes; i++)
 	{
 		if (buf[i] == '.')
@@ -134,8 +132,41 @@ void ReadInt()
 	if (!isValid)
 	{
 		printf("\n\n The number is invalid");
-		DEBUG('a', "\n The number is invalid");
 		machine->WriteRegister(2, 0);
 	}
+	else
+	{
+		int res = atoi(buf);
+		machine -> WriteRegister(2,res);
+	}
 	delete buf;
+}
+void PrintInt(int number)
+{
+	number = machine -> ReadRegister(4);
+	if (number == 0)
+	{
+		gSynchConsole -> Write("0",1);
+		break;
+	}
+	bool isNega = false;
+	if(number < 0)
+	{
+		isNega = true;
+		number *= (-1);
+	}
+	int len = (int)log10(number) + 1; // dem so chu so
+	if (isNega) len += 1;
+	char* buf = new char[leng+1];
+	buf[len] = '\0';
+	int i = len - 1;
+	while(number > 0)
+	{
+		buf[i] = (char)((number % 10) + '0'));
+		number /= 10;
+		i--;
+	}
+	if(Nega) buf[0] = '-';
+	gSynchConsole->Write(buf, len +1);
+	break;
 }
