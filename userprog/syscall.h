@@ -123,7 +123,7 @@ void Fork(void (*func)());
  * or not. 
  */
 void Yield();		
-
+int ReadInt();
 #endif /* IN_ASM */
 
 #endif /* SYSCALL_H */
