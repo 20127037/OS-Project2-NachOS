@@ -24,6 +24,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#define MAX 200
 
 // increase program counter
 
@@ -100,4 +101,47 @@ ExceptionHandler(ExceptionType which)
 			}
 		}
 	}
+}
+
+void ReadInt()
+{
+	char* buf = new char[MAX+1];
+	int numBytes = gSynchConsole -> Read(buf, MAX+1);
+	int cur = 1;
+	bool isValid = true;
+	bool dot = false;
+	int res = 0;
+	for(int i = cur; i < numBytes; i++)
+	{
+		if (buf[i] == '.')
+		{
+			dot = true;
+			cur = i + 1;
+			break;
+		}
+	}
+	if (dot)
+	{
+		for (int i = cur; i < numBytes; i++)
+		{
+			if (buf[i] != '0')
+			{
+				isValid = false;
+				break;
+			}
+		}
+	}
+	if (!isValid)
+	{
+		printf("\n\n The number is invalid");
+		DEBUG('a', "\n The number is invalid");
+		machine->WriteRegister(2, 0);
+	}
+	else
+	{
+		for (int i = cur + 1; i < numBytes; i++)
+			result = result *10 + (int)(buf[i] - 48);
+		machine->WriteRegister(2, result);
+	}
+	delete buf;
 }
