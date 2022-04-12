@@ -216,7 +216,7 @@ void PrintInt()
 	if (number == 0)
 	{
 		gSynchConsole -> Write("0",1);
-		break;
+		return;
 	}
 	bool isNega = false;
 	if(number < 0)
@@ -237,7 +237,7 @@ void PrintInt()
 	}
 	if(Nega) buf[0] = '-';
 	gSynchConsole->Write(buf, len +1);
-	break;
+	return;
 }
 
 
