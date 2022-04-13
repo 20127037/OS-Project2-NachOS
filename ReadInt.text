@@ -1,0 +1,18 @@
+void ExceptionHandler_ReadInt() {
+    /*int: [-2147483648 , 2147483647] --> max length = 11*/
+    const int maxlen = 11;
+    char num_string[maxlen] = {0};
+    long long ret = 0;
+    for (int i = 0; i < maxlen; i++) {
+        char c = 0;
+        gSynchConsole->Read(&c,1);
+        if (c >= '0' && c <= '9') num_string[i] = c;
+        else if (i == 0 && c == '-') num_string[i] = c;
+        else break;
+    }
+    int i = (num_string[0] == '-') ? 1 : 0;
+    while (i < maxlen && num_string[i] >= '0' && num_string[i] <= '9')
+        ret = ret*10 + num_string[i++] - '0';
+    ret = (num_string[0] == '-') ? (-ret) : ret;
+    machine->WriteRegister(2, (int)ret);
+}
