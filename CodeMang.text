@@ -1,10 +1,30 @@
-void ExceptionHandler_ReadChar() {
-    char c = 0;
-    gSynchConsole->Read(&c,1);
-    machine->WriteRegister(2, (int)c);
-}
-void ExceptionHandler_PrintChar() {
-    char c = (char)machine->ReadRegister(4);
-    gSynchConsole->Write(&c,1);
-    machine->WriteRegister(2, 0);
-}
+ case SC_ReadChar:
+                    DEBUG(dbgSys, "Read char from console input\n");
+
+                    charResult = SysReadChar();
+
+                    DEBUG(dbgSys, "Read returning with " << charResult << "\n");
+
+                    kernel->machine->WriteRegister(2, (int)charResult);
+
+                    IncPCReg();
+
+                    return;
+
+                    ASSERTNOTREACHED();
+                    break;
+
+                case SC_PrintChar:
+                    DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
+                                           << " to console output\n");
+
+                    SysPrintChar((char)kernel->machine->ReadRegister(4));
+
+                    DEBUG(dbgSys, "Print completed\n");
+
+                    IncPCReg();
+
+                    return;
+
+                    ASSERTNOTREACHED();
+                    break;
