@@ -1,51 +1,57 @@
-
-// Input: Khong gian dia chi User(int) - gioi han cua buffer(int)
-// Output: Bo nho dem Buffer(char*)
-// Chuc nang: Sao chep vung nho User sang vung nho System
-char* User2System(int virtAddr, int limit)
-{
-	int i; //chi so index
-	int oneChar;
-	char* kernelBuf = NULL;
-	kernelBuf = new char[limit + 1]; //can cho chuoi terminal
-	if (kernelBuf == NULL)
-		return kernelBuf;
-		
-	memset(kernelBuf, 0, limit + 1);
-	
-	for (i = 0; i < limit; i++)
-	{
-		machine->ReadMem(virtAddr + i, 1, &oneChar);
-		kernelBuf[i] = (char)oneChar;
-		if (oneChar == 0)
-			break;
-	}
-	return kernelBuf;
-}
-
-
-// Input: Khong gian vung nho User(int) - gioi han cua buffer(int) - bo nho dem buffer(char*)
-// Output: So byte da sao chep(int)
-// Chuc nang: Sao chep vung nho System sang vung nho User
-int System2User(int virtAddr, int len, char* buffer)
-{
-	if (len < 0) return -1;
-	if (len == 0)return len;
-	int i = 0;
-	int oneChar = 0;
-	do{
-		oneChar = (int)buffer[i];
-		machine->WriteMem(virtAddr + i, 1, oneChar);
-		i++;
-	} while (i < len && oneChar != 0);
-	return i;
-}
-
-#include <stdio.h>
- 
-int main(){
-    for(int i = 0; i < 128; ++i){
-        // if(i == 7) continue;
-        printf("%5d%5c\n", i, i);
-    }
-}
+case SC_PrintInt:
+		{	
+		    // Input: mot so integer
+                    // Output: khong co 
+                    // Chuc nang: In so nguyen len man hinh console
+                    int number = machine->ReadRegister(4);
+		    if(number == 0)
+                    {
+                        gSynchConsole->Write("0", 1); // In ra man hinh so 0
+                        IncreasePC();
+                        return;    
+                    }
+                    
+                    /*Qua trinh chuyen so thanh chuoi de in ra man hinh*/
+                    bool isNegative = false; // gia su la so duong
+                    int numberOfNum = 0; // Bien de luu so chu so cua number
+                    int firstNumIndex = 0; 
+			
+                    if(number < 0)
+                    {
+                        isNegative = true;
+                        number = number * -1; // Nham chuyen so am thanh so duong de tinh so chu so
+                        firstNumIndex = 1; 
+                    } 	
+                    
+                    int t_number = number; // bien tam cho number
+                    while(t_number)
+                    {
+                        numberOfNum++;
+                        t_number /= 10;
+                    }
+    
+		    // Tao buffer chuoi de in ra man hinh
+                    char* buffer;
+                    int MAX_BUFFER = 255;
+                    buffer = new char[MAX_BUFFER + 1];
+                    for(int i = firstNumIndex + numberOfNum - 1; i >= firstNumIndex; i--)
+                    {
+                        buffer[i] = (char)((number % 10) + 48);
+                        number /= 10;
+                    }
+                    if(isNegative)
+                    {
+                        buffer[0] = '-';
+			buffer[numberOfNum + 1] = 0;
+                        gSynchConsole->Write(buffer, numberOfNum + 1);
+                        delete buffer;
+                        IncreasePC();
+                        return;
+                    }
+		    buffer[numberOfNum] = 0;	
+                    gSynchConsole->Write(buffer, numberOfNum);
+                    delete buffer;
+                    IncreasePC();
+                    return;        			
+					
+		}
